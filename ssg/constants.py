@@ -72,7 +72,7 @@ XCCDF12_NS = "http://checklists.nist.gov/xccdf/1.2"
 min_ansible_version = "2.5"
 ansible_version_requirement_pre_task_name = \
     "Verify Ansible meets SCAP-Security-Guide version requirements."
-standard_profiles = ['standard', 'pci-dss', 'desktop', 'server']
+standard_profiles = ['standard', 'pci-dss', 'desktop', 'server', 'ens-server', 'ens-client']
 
 oval_header = (
     """
