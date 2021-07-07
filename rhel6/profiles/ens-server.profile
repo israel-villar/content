@@ -300,12 +300,14 @@ selections:
   # sshd
   - sshd_required=yes
 #-  - service_sshd_enabled
-  - sshd_disable_root_login
+#-  - sshd_disable_root_login
   #- sshd_disable_root_password_login
-  - sshd_print_last_log
+#-  - sshd_print_last_log
   - sshd_allow_only_protocol2
   - sshd_disable_compression
   - sshd_do_not_permit_user_env
+  # rhel6 only support yes (not sandbox)
+  - var_sshd_priv_separation=yes
   - sshd_use_priv_separation
   - sshd_enable_strictmodes
   - disable_host_auth
