@@ -205,11 +205,6 @@ selections:
   - accounts_umask_etc_csh_cshrc
   - accounts_umask_interactive_users
 
-  ### FMT_MOF_EXT.1 / AC-11(a)
-  ### Set Screen Lock Timeout Period to 10 Minutes or Less
-  - accounts_tmout
-  - var_accounts_tmout=15_min
-
   #### CCN-STIC-619_Paso_7_herramientas_servicios_y_demonios_innecesarios
   ## FIXME: Sorry, I won't disable nfs
   - kernel_module_freevxfs_disabled
