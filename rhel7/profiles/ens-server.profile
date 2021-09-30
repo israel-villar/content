@@ -278,11 +278,20 @@ selections:
 
   #### CCN-STIC-619_Paso_12_Permisos_particiones
   ## Partitioning
+  #- partition_for_boot
+  - partition_for_tmp
+  - partition_for_var_log_audit
+  #- mount_option_boot_nodev
+  #- mount_option_boot_noexec
+  #- mount_option_boot_nosuid
   #- mount_option_home_nodev
   #- mount_option_home_nosuid
-  #- mount_option_tmp_nodev
-  #- mount_option_tmp_noexec
-  #- mount_option_tmp_nosuid
+  - mount_option_tmp_nodev
+  - mount_option_tmp_noexec
+  - mount_option_tmp_nosuid
+  - mount_option_var_log_audit_nodev
+  - mount_option_var_log_audit_noexec
+  - mount_option_var_log_audit_nosuid
   #- mount_option_var_tmp_nodev
   #- mount_option_var_tmp_noexec
   #- mount_option_var_tmp_nosuid
