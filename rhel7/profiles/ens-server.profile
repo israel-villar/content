@@ -23,13 +23,19 @@ selections:
 # Grouped by ENS step script
 
   #### CCN-STIC-619_Paso_1_contrasena_grub
-  #- grub2_password
+  - grub2_password
+  - file_groupowner_grub2_cfg
+  - file_owner_grub2_cfg
+  - file_permissions_grub2_cfg
 
   #### Extended CCN-STIC-619_Paso_2_parametros_del_kernel
   ## Network Settings
   # FIXME: ENS ignores ALL icmp echo request, NONSENSE!!! (net.ipv4.icmp_echo_ignore_all)
   # FIXME: ENS disable TCP timestamps. No other standard does (net.ipv4.tcp_timestamps)
-  # FIXME: ENS disables ipv6 completely!!! I refuse to do so!
+  - kernel_module_ipv6_option_disabled
+  - network_ipv6_disable_interfaces
+  - sysctl_net_ipv6_conf_all_disable_ipv6
+  - sysctl_net_ipv6_conf_default_disable_ipv6
   - sysctl_net_ipv6_conf_all_accept_ra
   - sysctl_net_ipv6_conf_default_accept_ra
   - sysctl_net_ipv4_conf_all_accept_redirects
@@ -109,7 +115,9 @@ selections:
   - audit_rules_file_deletion_events_unlinkat
   - audit_rules_file_deletion_events_unlink
   - audit_rules_immutable
+  - audit_rules_kernel_module_loading
   - audit_rules_kernel_module_loading_delete
+  - audit_rules_kernel_module_loading_finit
   - audit_rules_kernel_module_loading_init
   - audit_rules_login_events_faillock
   - audit_rules_login_events_lastlog
@@ -179,7 +187,7 @@ selections:
 
   #### CCN-STIC-619_Paso_5_limitacion_usb
   ## Step 5: FIXME:  config usbguard
-  - package_usbguard_installed  
+  #- package_usbguard_installed  
 
   #### CCN-STIC-619_Paso_6_limites_recursos_usuario
   ## Step 6: user limits
@@ -229,9 +237,9 @@ selections:
   ## Nothing to do, really
 
   #### CCN-STIC-619_Paso_10_caducidad_complejidad_contraseñas
-  ## Configure Minimum Password Length to 12 Characters
-  - var_accounts_password_minlen_login_defs=12
-  - var_password_pam_minlen=12
+  ## Configure Minimum Password Length to 10 Characters
+  - var_accounts_password_minlen_login_defs=10
+  - var_password_pam_minlen=10
   - accounts_password_pam_minlen
   - var_password_pam_difok=8
   - accounts_password_pam_difok
@@ -255,9 +263,9 @@ selections:
 
   ## Passwd expiration
   - var_account_disable_post_pw_expiration=35
-  - var_accounts_maximum_age_login_defs=90
+  - var_accounts_maximum_age_login_defs=60
   - var_accounts_minimum_age_login_defs=2
-  - var_accounts_password_warn_age_login_defs=7
+  - var_accounts_password_warn_age_login_defs=10
   - account_disable_post_pw_expiration
   - accounts_maximum_age_login_defs
   - accounts_minimum_age_login_defs
@@ -278,7 +286,7 @@ selections:
 
   #### CCN-STIC-619_Paso_12_Permisos_particiones
   ## Partitioning
-  #- partition_for_boot
+  ##- partition_for_boot
   - partition_for_tmp
   - partition_for_var_log_audit
   #- mount_option_boot_nodev
@@ -329,15 +337,20 @@ selections:
   - no_empty_passwords
   - sshd_disable_kerb_auth
   - sshd_disable_gssapi_auth
+  ##- sshd_set_keepalive_0
   - sshd_set_keepalive
   - sshd_enable_warning_banner
   - sshd_disable_rhosts_rsa
   #- sshd_use_approved_ciphers
   #- sshd_use_approved_macs
-  - sshd_idle_timeout_value=10_minutes
+  - sshd_idle_timeout_value=5_minutes
   - sshd_set_idle_timeout
 
   # Time Server
+  - package_chrony_installed
+  ##- service_chronyd_enabled
+  - service_chronyd_or_ntpd_enabled
+  - chronyd_specify_remote_server
 
   ### systemd
   - disable_ctrlaltdel_reboot
