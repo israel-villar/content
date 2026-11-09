@@ -2,7 +2,7 @@
 policy: CIS Benchmark for Debian 13
 title: CIS Benchmark for Debian 13
 id: cis_debian13
-version: '1.0.0'
+version: '1.1.0'
 source: https://www.cisecurity.org/cis-benchmarks
 
 levels:
@@ -370,7 +370,7 @@ controls:
       title: Ensure access to gpg key files are configured (Automated)
       levels:
           - l1_server
-          - l2_server
+          - l1_workstation
       rules:
           - file_groupowner_apt_gpg_keys
           - file_groupowner_apt_sources_list_d
@@ -384,7 +384,7 @@ controls:
       title: Ensure access to /etc/apt/trusted.gpg.d directory is configured (Automated)
       levels:
           - l1_server
-          - l2_server
+          - l1_workstation
       rules:
           - directory_groupowner_apt_trusted_gpg_d
           - directory_owner_apt_trusted_gpg_d
@@ -395,7 +395,7 @@ controls:
       title: Ensure access to /etc/apt/auth.conf.d directory is configured (Automated)
       levels:
           - l1_server
-          - l2_server
+          - l1_workstation
       rules:
           - directory_groupowner_apt_auth_conf_d
           - directory_owner_apt_auth_conf_d
@@ -417,7 +417,7 @@ controls:
       title: Ensure access to /usr/share/keyrings directory is configured (Automated)
       levels:
           - l1_server
-          - l2_server
+          - l1_workstation
       rules:
           - directory_groupowner_usr_share_keyrings
           - directory_owner_usr_share_keyrings
@@ -428,7 +428,7 @@ controls:
       title: Ensure access to /etc/apt/sources.list.d directory is configured (Automated)
       levels:
           - l1_server
-          - l2_server
+          - l1_workstation
       rules:
           - directory_groupowner_apt_sources_list_d
           - directory_owner_apt_sources_list_d
@@ -439,12 +439,66 @@ controls:
       title: Ensure access to files in /etc/apt/sources.list.d are configured (Automated)
       levels:
           - l1_server
-          - l2_server
+          - l1_workstation
       rules:
           - file_groupowner_apt_sources_list_d
           - file_owner_apt_sources_list_d
           - file_permissions_apt_sources_list_d
       status: automated
+
+    - id: 1.2.1.10
+      title: Ensure repositories are set to https in /etc/apt/sources.list (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15326.
+
+    - id: 1.2.1.11
+      title: Ensure repositories are set to https in /etc/apt/sources.list.d directory (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15326.
+
+    - id: 1.2.1.12
+      title: Ensure AllowInsecureRepositories is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15326.
+
+    - id: 1.2.1.13
+      title: Ensure AllowWeakRepositories is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15326.
+
+    - id: 1.2.1.14
+      title: Ensure AllowDowngradeToInsecureRepositories is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15326.
+
+    - id: 1.2.1.15
+      title: Ensure Acquire::Check-Date is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15326.
 
     - id: 1.2.2.1
       title: Ensure updates, patches, and additional security software are installed (Manual)
@@ -454,7 +508,7 @@ controls:
       status: manual
 
     - id: 1.3.1.1
-      title: Ensure AppArmor packages are installed (Automated)
+      title: Ensure apparmor packages are installed (Automated)
       levels:
           - l1_server
           - l1_workstation
@@ -470,7 +524,11 @@ controls:
           - l1_workstation
       rules:
           - grub2_enable_apparmor
+          - apparmor_configured
       status: automated
+      notes: |
+          The CIS control also checks that at least one AppArmor profile is
+          loaded. This is not covered by the rules.
 
     - id: 1.3.1.3
       title: Ensure all AppArmor Profiles are enforcing (Automated)
@@ -486,15 +544,6 @@ controls:
           and unconfined. Currently, the control changes the default apparmor
           mode for all profiles in /etc/apparmor.d which can
           break certain applications. See https://workbench.cisecurity.org/benchmarks/18959/tickets/23987
-
-    - id: 1.3.1.4
-      title: Ensure apparmor_restrict_unprivileged_unconfined is enabled (Automated)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - sysctl_kernel_apparmor_restrict_unprivileged_unconfined
-      status: automated
 
     - id: 1.4.1
       title: Ensure bootloader password is set (Automated)
@@ -534,8 +583,6 @@ controls:
           - sysctl_fs_protected_symlinks
       status: automated
 
-    # Note: CIS Debian 13 v1.0.0 appears to duplicate kernel.yama.ptrace_scope
-    # in both 1.5.3 and 1.5.10. Keeping both IDs for traceability to the benchmark.
     - id: 1.5.3
       title: Ensure kernel.yama.ptrace_scope is configured (Automated)
       levels:
@@ -601,16 +648,6 @@ controls:
       status: automated
 
     - id: 1.5.10
-      title: Ensure kernel.yama.ptrace_scope is configured (Automated)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - sysctl_kernel_yama_ptrace_scope_value=1
-          - sysctl_kernel_yama_ptrace_scope
-      status: automated
-
-    - id: 1.5.11
       title: Ensure core file size is configured (Automated)
       levels:
           - l1_server
@@ -619,7 +656,7 @@ controls:
           - disable_users_coredumps
       status: automated
 
-    - id: 1.5.12
+    - id: 1.5.11
       title: Ensure systemd-coredump ProcessSizeMax is configured (Automated)
       levels:
           - l1_server
@@ -628,7 +665,7 @@ controls:
           - coredump_disable_backtraces
       status: automated
 
-    - id: 1.5.13
+    - id: 1.5.12
       title: Ensure systemd-coredump Storage is configured (Automated)
       levels:
           - l1_server
@@ -668,6 +705,28 @@ controls:
       status: automated
 
     - id: 1.6.4
+      title: Ensure pam_motd is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rule is being added in https://github.com/ComplianceAsCode/content/pull/15275.
+
+    - id: 1.6.5
+      title: Ensure sshd warning Banner is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      rules:
+          - cis_banner_text=cis
+          - sshd_enable_warning_banner_net
+          - banner_etc_issue_net_cis
+      status: automated
+      notes: |
+          The rules set the sshd Banner to /etc/issue.net and check its content.
+
+    - id: 1.6.6
       title: Ensure access to /etc/motd is configured (Automated)
       levels:
           - l1_server
@@ -678,7 +737,7 @@ controls:
           - file_permissions_etc_motd
       status: automated
 
-    - id: 1.6.5
+    - id: 1.6.7
       title: Ensure access to /etc/issue is configured (Automated)
       levels:
           - l1_server
@@ -689,7 +748,7 @@ controls:
           - file_permissions_etc_issue
       status: automated
 
-    - id: 1.6.6
+    - id: 1.6.8
       title: Ensure access to /etc/issue.net is configured (Automated)
       levels:
           - l1_server
@@ -700,15 +759,47 @@ controls:
           - file_permissions_etc_issue_net
       status: automated
 
-    - id: 1.7.1
-      title: Ensure GDM is removed (Automated)
+    - id: 1.6.9
+      title: Ensure access to pam_motd file is configured (Automated)
       levels:
-          - l2_server
-      rules:
-          - package_gdm_removed
-      status: automated
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15275.
 
-    - id: 1.7.2
+    - id: 1.6.10
+      title: Ensure access to sshd warning banner is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      rules:
+          - file_groupowner_etc_issue_net
+          - file_owner_etc_issue_net
+          - file_permissions_etc_issue_net
+      status: automated
+      notes: |
+          The rules check /etc/issue.net, which is the sshd Banner file set by
+          sshd_enable_warning_banner_net (see 1.6.5).
+
+    - id: 1.6.11
+      title: Ensure update-notifier-motd.service is not in use (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15326.
+
+    - id: 1.6.12
+      title: Ensure update-notifier-motd.timer is not in use (Automated)
+      levels:
+          - l1_server
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15326.
+
+    - id: 1.7.1
       title: Ensure GDM login banner is configured (Automated)
       levels:
           - l1_server
@@ -720,8 +811,8 @@ controls:
           - dconf_gnome_login_banner_text
       status: automated
 
-    - id: 1.7.3
-      title: Ensure GDM disable-user-list option is enabled (Automated)
+    - id: 1.7.2
+      title: Ensure GDM disable-user-list is configured (Automated)
       levels:
           - l1_server
           - l1_workstation
@@ -729,8 +820,8 @@ controls:
           - dconf_gnome_disable_user_list
       status: automated
 
-    - id: 1.7.4
-      title: Ensure GDM screen locks when the user is idle (Automated)
+    - id: 1.7.3
+      title: Ensure GDM screen lock is configured (Automated)
       levels:
           - l1_server
           - l1_workstation
@@ -742,74 +833,30 @@ controls:
           - dconf_gnome_screensaver_lock_delay
       status: automated
       notes: |
-          The rules satisfy both controls 1.7.4 and 1.7.5.
           Rule lock_enabled is not part of CIS recommendation but is
           required to assure the lock is enabled and cannot be manually disabled.
           See https://workbench.cisecurity.org/benchmarks/18959/tickets/23123
+
+    - id: 1.7.4
+      title: Ensure GDM automount is configured (Automated)
+      levels:
+          - l1_server
+          - l2_workstation
+      rules:
+          - dconf_gnome_disable_automount
+          - dconf_gnome_disable_automount_open
+      status: automated
 
     - id: 1.7.5
-      title: Ensure GDM screen locks cannot be overridden (Automated)
+      title: Ensure GDM autorun-never is configured (Automated)
       levels:
           - l1_server
           - l1_workstation
       rules:
-          - dconf_gnome_screensaver_idle_delay
-          - dconf_gnome_screensaver_lock_enabled
-          - dconf_gnome_screensaver_lock_delay
+          - dconf_gnome_disable_autorun
       status: automated
-      notes: |
-          The rules satisfy both controls 1.7.4 and 1.7.5.
-          Rule lock_enabled is not part of CIS recommendation but is
-          required to assure the lock is enabled and cannot be manually disabled.
-          See https://workbench.cisecurity.org/benchmarks/18959/tickets/23123
 
     - id: 1.7.6
-      title: Ensure GDM automatic mounting of removable media is disabled (Automated)
-      levels:
-          - l1_server
-          - l2_workstation
-      rules:
-          - dconf_gnome_disable_automount
-          - dconf_gnome_disable_automount_open
-      status: automated
-      notes: |
-          The rules satisfy both controls 1.7.6 and 1.7.7
-
-    - id: 1.7.7
-      title: Ensure GDM disabling automatic mounting of removable media is not overridden (Automated)
-      levels:
-          - l1_server
-          - l2_workstation
-      rules:
-          - dconf_gnome_disable_automount
-          - dconf_gnome_disable_automount_open
-      status: automated
-      notes: |
-          The rules satisfy both controls 1.7.6 and 1.7.7
-
-    - id: 1.7.8
-      title: Ensure GDM autorun-never is enabled (Automated)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - dconf_gnome_disable_autorun
-      status: automated
-      notes: |
-          The rule satisfies both controls 1.7.8 and 1.7.9
-
-    - id: 1.7.9
-      title: Ensure GDM autorun-never is not overridden (Automated)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - dconf_gnome_disable_autorun
-      status: automated
-      notes: |
-          The rule satisfies both controls 1.7.8 and 1.7.9
-
-    - id: 1.7.10
       title: Ensure XDMCP is not enabled (Automated)
       levels:
           - l1_server
@@ -818,7 +865,7 @@ controls:
           - gnome_gdm_disable_xdmcp
       status: automated
 
-    - id: 1.7.11
+    - id: 1.7.7
       title: Ensure Xwayland is configured (Automated)
       levels:
           - l2_server
@@ -980,7 +1027,7 @@ controls:
       status: automated
 
     - id: 2.1.16
-      title: Ensure telnet-server services are not in use (Automated)
+      title: Ensure telnet server services are not in use (Automated)
       levels:
           - l1_server
           - l1_workstation
@@ -1092,7 +1139,9 @@ controls:
       rules:
           - package_inetutils-telnet_removed
           - package_telnet_removed
-      status: automated
+      status: partial
+      notes: |
+          There is no rule for the telnet-ssl package.
 
     - id: 2.2.5
       title: Ensure ldap client is not installed (Automated)
@@ -1111,7 +1160,9 @@ controls:
       rules:
           - package_ftp_removed
           - package_tnftp_removed
-      status: automated
+      status: partial
+      notes: |
+          There are no rules for the atftp, inetutils-ftp and ftp-ssl packages.
 
     - id: 2.3.1.1
       title: Ensure a single time synchronization daemon is in use (Automated)
@@ -1154,7 +1205,7 @@ controls:
       notes: Implemented in 2.3.1.1
 
     - id: 2.3.3.1
-      title: Ensure chrony is configured with authorized timeserver (Automated)
+      title: Ensure chrony is configured (Automated)
       levels:
           - l1_server
           - l1_workstation
@@ -1382,10 +1433,17 @@ controls:
           - kernel_module_tipc_disabled
       status: automated
 
+    - id: 3.2.7
+      title: Ensure unneeded network protocol kernel modules are not available (Manual)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: manual
+
     - id: 3.3.1.1
       title: Ensure net.ipv4.ip_forward is configured (Automated)
       levels:
-          - l2_server
+          - l1_server
           - l1_workstation
       rules:
           - sysctl_net_ipv4_ip_forward
@@ -1554,6 +1612,15 @@ controls:
           - sysctl_net_ipv4_tcp_syncookies
       status: automated
 
+    - id: 3.3.1.19
+      title: Ensure net.ipv4.conf.all.route_localnet is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      rules:
+          - sysctl_net_ipv4_conf_all_route_localnet
+      status: automated
+
     - id: 3.3.2.1
       title: Ensure net.ipv6.conf.all.forwarding is configured (Automated)
       levels:
@@ -1672,7 +1739,6 @@ controls:
           - ufw_disabled_routed
       status: automated
 
-
     - id: 5.1.1
       title: Ensure access to /etc/ssh/sshd_config is configured (Automated)
       levels:
@@ -1685,6 +1751,17 @@ controls:
       status: automated
 
     - id: 5.1.2
+      title: Ensure access to /etc/ssh/sshd_config.d/ directory is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      rules:
+          - directory_groupowner_sshd_config_d
+          - directory_owner_sshd_config_d
+          - directory_permissions_sshd_config_d
+      status: automated
+
+    - id: 5.1.3
       title: Ensure access to SSH private host key files is configured (Automated)
       levels:
           - l1_server
@@ -1693,7 +1770,7 @@ controls:
           - file_permissions_sshd_private_key
       status: automated
 
-    - id: 5.1.3
+    - id: 5.1.4
       title: Ensure access to SSH public host key files is configured (Automated)
       levels:
           - l1_server
@@ -1702,7 +1779,7 @@ controls:
           - file_permissions_sshd_pub_key
       status: automated
 
-    - id: 5.1.4
+    - id: 5.1.5
       title: Ensure sshd access is configured (Automated)
       levels:
           - l1_server
@@ -1711,7 +1788,7 @@ controls:
           - sshd_limit_user_access
       status: automated
 
-    - id: 5.1.5
+    - id: 5.1.6
       title: Ensure sshd Banner is configured (Automated)
       levels:
           - l1_server
@@ -1720,7 +1797,7 @@ controls:
           - sshd_enable_warning_banner_net
       status: automated
 
-    - id: 5.1.6
+    - id: 5.1.7
       title: Ensure sshd Ciphers are configured (Automated)
       levels:
           - l1_server
@@ -1729,7 +1806,7 @@ controls:
           - sshd_use_strong_ciphers
       status: automated
 
-    - id: 5.1.7
+    - id: 5.1.8
       title: Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured (Automated)
       levels:
           - l1_server
@@ -1745,25 +1822,25 @@ controls:
           values. The CIS benchmark requires only that the values
           are greater than 0.
 
-    - id: 5.1.8
+    - id: 5.1.9
       title: Ensure sshd DisableForwarding is enabled (Automated)
       levels:
+          - l1_server
           - l1_workstation
-          - l2_server
       rules:
           - sshd_disable_forwarding
       status: automated
 
-    - id: 5.1.9
+    - id: 5.1.10
       title: Ensure sshd GSSAPIAuthentication is disabled (Automated)
       levels:
+          - l1_server
           - l1_workstation
-          - l2_server
       rules:
           - sshd_disable_gssapi_auth
       status: automated
 
-    - id: 5.1.10
+    - id: 5.1.11
       title: Ensure sshd HostbasedAuthentication is disabled (Automated)
       levels:
           - l1_server
@@ -1772,7 +1849,7 @@ controls:
           - disable_host_auth
       status: automated
 
-    - id: 5.1.11
+    - id: 5.1.12
       title: Ensure sshd IgnoreRhosts is enabled (Automated)
       levels:
           - l1_server
@@ -1781,7 +1858,7 @@ controls:
           - sshd_disable_rhosts
       status: automated
 
-    - id: 5.1.12
+    - id: 5.1.13
       title: Ensure sshd KexAlgorithms is configured (Automated)
       levels:
           - l1_server
@@ -1791,8 +1868,8 @@ controls:
           - sshd_use_strong_kex
       status: automated
 
-    - id: 5.1.13
-      title: Ensure sshd post-quantum cryptography key exchange algorithms are configured (Automated)
+    - id: 5.1.14
+      title: Ensure sshd post-quantum cryptography key exchange algorithms are configured (Manual)
       levels:
           - l1_server
           - l1_workstation
@@ -1801,11 +1878,11 @@ controls:
           - sshd_use_strong_kex
       status: automated
       notes: |
-          Same KexAlgorithms line and rule as 5.1.12. The cis_debian13 value of
+          Same KexAlgorithms line and rule as 5.1.13. The cis_debian13 value of
           sshd_strong_kex already lists the post-quantum algorithms
           mlkem768x25519-sha256 and sntrup761x25519-sha512@openssh.com first.
 
-    - id: 5.1.14
+    - id: 5.1.15
       title: Ensure sshd LoginGraceTime is configured (Automated)
       levels:
           - l1_server
@@ -1815,7 +1892,7 @@ controls:
           - sshd_set_login_grace_time
       status: automated
 
-    - id: 5.1.15
+    - id: 5.1.16
       title: Ensure sshd LogLevel is configured (Automated)
       levels:
           - l1_server
@@ -1824,7 +1901,7 @@ controls:
           - sshd_set_loglevel_info
       status: automated
 
-    - id: 5.1.16
+    - id: 5.1.17
       title: Ensure sshd MACs are configured (Automated)
       levels:
           - l1_server
@@ -1834,7 +1911,7 @@ controls:
           - sshd_use_strong_macs
       status: automated
 
-    - id: 5.1.17
+    - id: 5.1.18
       title: Ensure sshd MaxAuthTries is configured (Automated)
       levels:
           - l1_server
@@ -1844,7 +1921,7 @@ controls:
           - sshd_set_max_auth_tries
       status: automated
 
-    - id: 5.1.18
+    - id: 5.1.19
       title: Ensure sshd MaxSessions is configured (Automated)
       levels:
           - l1_server
@@ -1854,7 +1931,7 @@ controls:
           - sshd_set_max_sessions
       status: automated
 
-    - id: 5.1.19
+    - id: 5.1.20
       title: Ensure sshd MaxStartups is configured (Automated)
       levels:
           - l1_server
@@ -1864,7 +1941,7 @@ controls:
           - sshd_set_maxstartups
       status: automated
 
-    - id: 5.1.20
+    - id: 5.1.21
       title: Ensure sshd PermitEmptyPasswords is disabled (Automated)
       levels:
           - l1_server
@@ -1873,7 +1950,7 @@ controls:
           - sshd_disable_empty_passwords
       status: automated
 
-    - id: 5.1.21
+    - id: 5.1.22
       title: Ensure sshd PermitRootLogin is disabled (Automated)
       levels:
           - l1_server
@@ -1882,7 +1959,7 @@ controls:
           - sshd_disable_root_login
       status: automated
 
-    - id: 5.1.22
+    - id: 5.1.23
       title: Ensure sshd PermitUserEnvironment is disabled (Automated)
       levels:
           - l1_server
@@ -1891,7 +1968,7 @@ controls:
           - sshd_do_not_permit_user_env
       status: automated
 
-    - id: 5.1.23
+    - id: 5.1.24
       title: Ensure sshd UsePAM is enabled (Automated)
       levels:
           - l1_server
@@ -1908,6 +1985,8 @@ controls:
       rules:
           - package_sudo_installed
       status: automated
+      notes: |
+          The CIS control accepts sudo or sudo-rs. The rule only checks for sudo.
 
     - id: 5.2.2
       title: Ensure sudo commands use pty (Automated)
@@ -1975,8 +2054,8 @@ controls:
           - package_pam_runtime_installed
       status: automated
       notes: |
-          The CIS control checks that version >= 1.5.2-6 and not that
-          it is the latest version as the title suggests.
+          The CIS control also checks that no newer version is available
+          (apt list --upgradable). The rule only checks that the package is installed.
 
     - id: 5.3.1.2
       title: Ensure latest version of libpam-modules is installed (Automated)
@@ -1986,6 +2065,9 @@ controls:
       rules:
           - package_pam_modules_installed
       status: automated
+      notes: |
+          The CIS control also checks that no newer version is available
+          (apt list --upgradable). The rule only checks that the package is installed.
 
     - id: 5.3.1.3
       title: Ensure latest version of libpam-pwquality is installed (Automated)
@@ -1995,6 +2077,20 @@ controls:
       rules:
           - package_pam_pwquality_installed
       status: automated
+      notes: |
+          The CIS control also checks that no newer version is available
+          (apt list --upgradable). The rule only checks that the package is installed.
+
+    - id: 5.3.1.4
+      title: Ensure latest version of cracklib-runtime is installed (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          The CIS control also checks that no newer version is available
+          (apt list --upgradable). The rule only checks that the package is installed.
+          Rule is being added in https://github.com/ComplianceAsCode/content/pull/15273.
 
     - id: 5.3.2.1
       title: Ensure pam_unix module is enabled (Automated)
@@ -2402,29 +2498,38 @@ controls:
       status: automated
 
     - id: 6.1.1.1.2
+      title: Ensure systemd-journal-remote service is not in use (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      rules:
+          - socket_systemd-journal-remote_disabled
+      status: automated
+
+    - id: 6.1.1.1.3
+      title: Ensure journald is configured to send logs to rsyslog (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      rules:
+          - journald_forward_to_syslog
+      status: automated
+
+    - id: 6.1.1.1.4
       title: Ensure journald log file access is configured (Manual)
       levels:
           - l1_server
           - l1_workstation
       status: manual
 
-    - id: 6.1.1.1.3
+    - id: 6.1.1.1.5
       title: Ensure journald log file rotation is configured (Manual)
       levels:
           - l1_server
           - l1_workstation
       status: manual
 
-    - id: 6.1.1.1.4
-      title: Ensure journald ForwardToSyslog is disabled (Automated)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - journald_disable_forward_to_syslog
-      status: automated
-
-    - id: 6.1.1.1.5
+    - id: 6.1.1.1.6
       title: Ensure journald Storage is configured (Automated)
       levels:
           - l1_server
@@ -2433,51 +2538,13 @@ controls:
           - journald_storage
       status: automated
 
-    - id: 6.1.1.1.6
+    - id: 6.1.1.1.7
       title: Ensure journald Compress is configured (Automated)
       levels:
           - l1_server
           - l1_workstation
       rules:
           - journald_compress
-      status: automated
-
-    - id: 6.1.1.2.1
-      title: Ensure systemd-journal-remote is installed (Automated)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - package_systemd-journal-remote_installed
-      status: automated
-
-    - id: 6.1.1.2.2
-      title: Ensure systemd-journal-upload authentication is configured (Manual)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - systemd_journal_upload_server_tls
-          - systemd_journal_upload_url
-      status: automated
-
-
-    - id: 6.1.1.2.3
-      title: Ensure systemd-journal-upload is enabled and active (Automated)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - service_systemd-journal-upload_enabled
-      status: automated
-
-    - id: 6.1.1.2.4
-      title: Ensure systemd-journal-remote service is not in use (Automated)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - socket_systemd-journal-remote_disabled
       status: automated
 
     - id: 6.1.2.1
@@ -2499,15 +2566,6 @@ controls:
       status: automated
 
     - id: 6.1.2.3
-      title: Ensure journald is configured to send logs to rsyslog (Automated)
-      levels:
-          - l1_server
-          - l1_workstation
-      rules:
-          - journald_forward_to_syslog
-      status: automated
-
-    - id: 6.1.2.4
       title: Ensure rsyslog log file creation mode is configured (Automated)
       levels:
           - l1_server
@@ -2516,14 +2574,14 @@ controls:
           - rsyslog_filecreatemode
       status: automated
 
-    - id: 6.1.2.5
+    - id: 6.1.2.4
       title: Ensure rsyslog logging is configured (Manual)
       levels:
           - l1_server
           - l1_workstation
       status: manual
 
-    - id: 6.1.2.6
+    - id: 6.1.2.5
       title: Ensure rsyslog is configured to send logs to a remote log host (Manual)
       levels:
           - l1_server
@@ -2536,8 +2594,7 @@ controls:
           is site-specific and can be too complex to reliably audit and remediate.
           See also https://github.com/ComplianceAsCode/content/issues/11812
 
-
-    - id: 6.1.2.7
+    - id: 6.1.2.6
       title: Ensure rsyslog is not configured to receive logs from a remote client (Automated)
       levels:
           - l1_server
@@ -2546,14 +2603,14 @@ controls:
           - rsyslog_nolisten
       status: automated
 
-    - id: 6.1.2.8
+    - id: 6.1.2.7
       title: Ensure logrotate is configured (Manual)
       levels:
           - l1_server
           - l1_workstation
       status: manual
 
-    - id: 6.1.2.9
+    - id: 6.1.2.8
       title: Ensure rsyslog-gnutls is installed (Automated)
       levels:
           - l2_server
@@ -2562,7 +2619,7 @@ controls:
           - package_rsyslog-gnutls_installed
       status: automated
 
-    - id: 6.1.2.10
+    - id: 6.1.2.9
       title: Ensure rsyslog forwarding uses gtls (Automated)
       levels:
           - l2_server
@@ -2571,7 +2628,7 @@ controls:
           - rsyslog_remote_tls
       status: automated
 
-    - id: 6.1.2.11
+    - id: 6.1.2.10
       title: Ensure rsyslog CA certificates are configured (Manual)
       levels:
           - l2_server
@@ -2724,7 +2781,6 @@ controls:
       notes: |
           The variables should allow multiple options.
 
-
     - id: 6.2.3.1
       title: Ensure modification of the /etc/sudoers file is collected (Automated)
       levels:
@@ -2774,7 +2830,6 @@ controls:
           - audit_rules_networkconfig_modification_setdomainname
       status: automated
 
-
     - id: 6.2.3.6
       title: Ensure events that modify /etc/issue and /etc/issue.net are collected (Automated)
       levels:
@@ -2785,7 +2840,6 @@ controls:
           - audit_rules_networkconfig_modification_etc_issue_net
       status: automated
 
-
     - id: 6.2.3.7
       title: Ensure events that modify /etc/hosts and /etc/hostname are collected (Automated)
       levels:
@@ -2795,7 +2849,6 @@ controls:
           - audit_rules_networkconfig_modification_etc_hosts
           - audit_rules_networkconfig_modification_hostname_file
       status: automated
-
 
     - id: 6.2.3.8
       title: Ensure events that modify the system's network environment are collected (Automated)
@@ -2814,7 +2867,6 @@ controls:
       rules:
           - audit_rules_networkconfig_modification_networkmanager
       status: automated
-
 
     - id: 6.2.3.10
       title: Ensure use of privileged commands are collected (Automated)
@@ -2906,7 +2958,6 @@ controls:
           - audit_rules_dac_modification_fchmodat2
       status: automated
 
-
     - id: 6.2.3.19
       title: Ensure discretionary access control permission modification events chown,fchown,lchown,fchownat are collected (Automated)
       levels:
@@ -2983,7 +3034,6 @@ controls:
           - audit_rules_file_deletion_events_renameat2
       status: automated
 
-
     - id: 6.2.3.26
       title: Ensure events that modify the system's Mandatory Access Controls are collected (Automated)
       levels:
@@ -3039,7 +3089,6 @@ controls:
           - audit_rules_privileged_commands_kmod
       status: automated
 
-
     - id: 6.2.3.32
       title: Ensure kernel "init_module" and "finit_module" loading unloading and modification is collected (Automated)
       levels:
@@ -3060,17 +3109,6 @@ controls:
       status: automated
 
     - id: 6.2.3.34
-      title: Ensure kernel query_module loading unloading and modification is collected (Automated)
-      levels:
-          - l2_server
-          - l2_workstation
-      rules:
-          - audit_rules_kernel_module_loading_create
-          - audit_rules_kernel_module_loading_query
-      status: automated
-
-
-    - id: 6.2.3.35
       title: Ensure the audit configuration is loaded regardless of errors (Automated)
       levels:
           - l2_server
@@ -3079,7 +3117,7 @@ controls:
           - audit_rules_continue_loading
       status: automated
 
-    - id: 6.2.3.36
+    - id: 6.2.3.35
       title: Ensure the audit configuration is immutable (Automated)
       levels:
           - l2_server
@@ -3088,7 +3126,7 @@ controls:
           - audit_rules_immutable
       status: automated
 
-    - id: 6.2.3.37
+    - id: 6.2.3.36
       title: Ensure the running and on disk configuration is the same (Manual)
       levels:
           - l2_server
@@ -3453,3 +3491,12 @@ controls:
           - file_permission_user_init_files
           - file_permission_user_bash_history
       status: automated
+
+    - id: 7.2.11
+      title: Ensure local interactive user dot directories access is configured (Automated)
+      levels:
+          - l1_server
+          - l1_workstation
+      status: pending
+      notes: |
+          Rules are being added in https://github.com/ComplianceAsCode/content/pull/15326.
